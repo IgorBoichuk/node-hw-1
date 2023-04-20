@@ -1,15 +1,6 @@
-// const { program } = require("commander");
-
+const { program } = require("commander");
 const contacts = require("./db/contacts.js");
-console.log(contacts);
 
-// Крок 3
-// Зроби імпорт модуля contacts.js в файлі index.js та перевір працездатність функції для роботи з контактами.
-
-// index.js
-// const argv = require("yargs").argv;
-
-// TODO: рефакторить
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case "list":
@@ -18,21 +9,18 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
       break;
 
     case "get":
-      // ... id
       const getContactById = await contacts.getContactById(id);
       console.log(getContactById);
       break;
 
     case "add":
-      // ... name email phone
-      const addContact = await contacts.addContact();
-      // console.log(addContact);
+      const newContact = await contacts.addContact({ name, email, phone });
+      console.log(newContact);
       break;
 
     case "remove":
-      // ... id
-      const removeContact = await contacts.removeContact();
-      // console.log(removeContact);
+      const removeContact = await contacts.removeContact(id);
+      console.log(removeContact);
       break;
 
     default:
@@ -40,8 +28,24 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
   }
 };
 
-// invokeAction(argv);
-invokeAction({ action: "list" });
-invokeAction({ action: "get", id: "e6ywwRe4jcqxXfCZOj_1e" });
-// invokeAction({ action: "add" });
-// invokeAction({ action: "remove" });
+// invokeAction({ action: "list" });
+// invokeAction({ action: "get", id: "e6ywwRe4jcqxXfCZOj_1e" });
+// invokeAction({
+//   action: "add",
+//   name: "Igor",
+//   email: "f20@online.ua",
+//   phone: "+380635559988",
+// });
+// invokeAction({ action: "remove", id: "aSvKTlhUopa5QU-Hn7NWB" });
+
+program
+  .option("-a, --action, <type>")
+  .option("-i, --id, <type>")
+  .option("-n,--name, <type>")
+  .option("-e,--email, <type>")
+  .option("-ph,--phone, <type>");
+
+program.parse();
+
+const options = program.opts();
+invokeAction(options);
